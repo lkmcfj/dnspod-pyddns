@@ -1,0 +1,23 @@
+{
+    "period": 600,
+    "token": "<DNSPod token ID>,<DNSPod token>",
+    "domains": [
+        {
+            "subdomain": "a",
+            "domain": "example.net"
+        }
+    ],
+    "email": {
+        "server": "smtp.qq.com",
+        "from": "sender@qq.com",
+        "to": "receiver@qq.com",
+        "token": "token for email server",
+        "ssl": true,
+        "port": 465,
+        "title": "title of warning email",
+        "content": "content of warning email, use <msg> to represent error detail",
+        "sender_name": "name of email sender",
+        "receiver_name": "name of email receiver"
+    },
+    "internet_test_url": "http://www.baidu.com/"
+}
