@@ -7,6 +7,10 @@ from email.mime.text import MIMEText
 from email.header import Header
 import requests
 
+def log(msg):
+    with open(config['log'], 'a', encoding='utf-8') as log_f:
+        log_f.write(msg + '\n')
+
 ua = 'Py DDNS for DNSPod/0.0.1(lkmcfjmic@outlook.com)'
 headers = {
     'User-Agent': ua,
@@ -61,7 +65,7 @@ records = []
 # list of dict with keys: record_id, domain, subdomain, line
 
 def update_record(record, ip):
-    print('update record: {}.{}, id={}, line={}, value={}'.format(
+    log('update record: {}.{}, id={}, line={}, value={}'.format(
         record['subdomain'], record['domain'], record['record_id'], record['line'], ip
     ))
     access_api('/Record.Ddns', {
@@ -92,8 +96,8 @@ def init():
             records.append(cur)
             if record['value'] != cur_ip:
                 update_record(cur, cur_ip)
-    print('Initialized.')
-    print(json.dumps(records, ensure_ascii=False, indent=4))
+    log('Initialized.')
+    log(json.dumps(records, ensure_ascii=False, indent=4))
 
 def update(ip):
     global records
@@ -107,20 +111,20 @@ def loop():
             time.sleep(config['period'])
             new_ip = my_ip()
             if new_ip != cur_ip:
-                print('IP change: {} --> {}'.format(cur_ip, new_ip))
+                log('{}: IP change: {} --> {}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), cur_ip, new_ip))
                 update(new_ip)
                 cur_ip = new_ip
             else:
-                print('IP not changed')
+                log('IP not changed')
     except:
         error_message = str(sys.exc_info()[0]) + str(sys.exc_info()[1])
-        print(error_message)
+        log(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ': ' + error_message)
         if internet_ok():
-            print('Internet OK, sending email')
+            log('Internet OK, sending email')
             send_warning_email(error_message)
             sys.exit(1)
         else:
-            print('Bad network, retry after {} seconds'.format(config['period']))
+            log('Bad network, retry after {} seconds'.format(config['period']))
             loop()
 
 if __name__ == '__main__':

@@ -19,5 +19,6 @@
         "sender_name": "name of email sender",
         "receiver_name": "name of email receiver"
     },
-    "internet_test_url": "http://www.baidu.com/"
+    "internet_test_url": "http://www.baidu.com/",
+    "log": "ddns.log"
 }
