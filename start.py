@@ -8,6 +8,7 @@ from email.header import Header
 import requests
 
 def log(msg):
+    print(msg)
     with open(config['log'], 'a', encoding='utf-8') as log_f:
         log_f.write(msg + '\n')
 
