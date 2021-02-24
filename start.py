@@ -8,6 +8,7 @@ from email.header import Header
 import requests
 
 def log(msg):
+    msg = '[{}]{}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), msg)
     print(msg)
     with open(config['log'], 'a', encoding='utf-8') as log_f:
         log_f.write(msg + '\n')
@@ -112,14 +113,14 @@ def loop():
             time.sleep(config['period'])
             new_ip = my_ip()
             if new_ip != cur_ip:
-                log('{}: IP change: {} --> {}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), cur_ip, new_ip))
+                log('IP change: {} --> {}'.format(cur_ip, new_ip))
                 update(new_ip)
                 cur_ip = new_ip
             else:
                 log('IP not changed')
     except:
         error_message = str(sys.exc_info()[0]) + str(sys.exc_info()[1])
-        log(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ': ' + error_message)
+        log(error_message)
         if internet_ok():
             log('Internet OK, sending email')
             send_warning_email(error_message)
