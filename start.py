@@ -130,8 +130,10 @@ def loop():
             loop()
 
 if __name__ == '__main__':
-    with open('config.json', 'r', encoding='utf-8') as config_f:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.json'), 'r', encoding='utf-8') as config_f:
         config = json.load(config_f)
+    while not internet_ok():
+        time.sleep(60)
     init()
     loop()
         
