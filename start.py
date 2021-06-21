@@ -8,6 +8,8 @@ from email.header import Header
 import requests
 
 def log(msg):
+    msg = '[{}]{}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), msg)
+    print(msg)
     with open(config['log'], 'a', encoding='utf-8') as log_f:
         log_f.write(msg + '\n')
 
@@ -111,7 +113,7 @@ def loop():
             time.sleep(config['period'])
             new_ip = my_ip()
             if new_ip != cur_ip:
-                log('{}: IP change: {} --> {}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), cur_ip, new_ip))
+                log('IP change: {} --> {}'.format(cur_ip, new_ip))
                 update(new_ip)
                 cur_ip = new_ip
             else:
