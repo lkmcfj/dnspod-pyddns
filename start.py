@@ -57,11 +57,17 @@ def send_warning_email(error_message):
             smtp.sendmail(email_conf['from'], email_conf['to'], message.as_bytes())
 
 cur_ip = None
-def my_ip():
-    r = requests.get('http://ip.42.pl/anything')
-    if not r.ok:
-        raise Exception('HTTP request failed on http://ip.42.pl/anything')
-    return r.text
+def my_ip(remain=10):
+    try:
+        r = requests.get('http://ip.42.pl/anything')
+        if not r.ok:
+            raise Exception('HTTP request failed on http://ip.42.pl/anything')
+        return r.text
+    except:
+        if remain > 0:
+            return my_ip(remain - 1)
+        else:
+            raise
 
 records = []
 # list of dict with keys: record_id, domain, subdomain, line
