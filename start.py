@@ -87,26 +87,33 @@ def update_record(record, ip):
         'value': ip
     })
 
-def init():
+def init(remain=5):
     global cur_ip, records, config
-    cur_ip = my_ip()
-    for domain in config['domains']:
-        record_list = access_api('/Record.List', {
-            'domain': domain['domain'],
-            'sub_domain': domain['subdomain'],
-            'record_type': 'A'
-        })
-        record_list = record_list['records']
-        for record in record_list:
-            cur = {
-                'record_id': record['id'],
+    try:
+        cur_ip = my_ip()
+        for domain in config['domains']:
+            record_list = access_api('/Record.List', {
                 'domain': domain['domain'],
-                'subdomain': domain['subdomain'],
-                'line': record['line']
-            }
-            records.append(cur)
-            if record['value'] != cur_ip:
-                update_record(cur, cur_ip)
+                'sub_domain': domain['subdomain'],
+                'record_type': 'A'
+            })
+            record_list = record_list['records']
+            for record in record_list:
+                cur = {
+                    'record_id': record['id'],
+                    'domain': domain['domain'],
+                    'subdomain': domain['subdomain'],
+                    'line': record['line']
+                }
+                records.append(cur)
+                if record['value'] != cur_ip:
+                    update_record(cur, cur_ip)
+    except:
+        if remain > 0:
+            init(remain - 1)
+            return
+        else:
+            raise
     log('Initialized.')
     log(json.dumps(records, ensure_ascii=False, indent=4))
 
