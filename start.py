@@ -37,8 +37,10 @@ def dns_resolve_list(domain):
 
 def internet_ok():
     try:
-        requests.get(config['internet_test_url'])
-        return True
+        if requests.get(config['internet_test_url']).ok:
+            return True
+        else:
+            return False
     except:
         return False
 
